@@ -1,0 +1,363 @@
+/* =========================================
+   RESET
+========================================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Roboto", sans-serif;
+    line-height: 1.6;
+    color: var(--cor-texto);
+    background-color: var(--branco);
+}
+
+/* =========================================
+   VARIÁVEIS GLOBAIS
+========================================= */
+:root {
+    --cor-primaria: #173a23;
+    --cor-secundaria: #d51320;
+
+    --cor-whatsapp: #25d366;
+    --cor-texto: #333;
+    --cor-fundo-claro: #f5f5f5;
+
+    --branco: #fff;
+}
+
+/* =========================================
+   ESTRUTURA
+========================================= */
+.container {
+    max-width: 1100px;
+    margin: auto;
+    padding: 0 20px;
+}
+
+.secao {
+    padding: 60px 0;
+}
+
+.fundo-claro {
+    background: var(--cor-fundo-claro);
+}
+
+.titulo-secao {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 40px;
+    color: var(--cor-primaria);
+}
+
+.texto-centro {
+    text-align: center;
+}
+
+/* =========================================
+   HEADER
+========================================= */
+header {
+    background: var(--cor-primaria);
+    color: var(--branco);
+    padding: 10px 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo img {
+    max-width: 200px;
+    display: block;
+}
+
+/* NAV */
+nav ul {
+    display: flex;
+    gap: 40px;
+    list-style: none;
+}
+
+nav a {
+    color: var(--branco);
+    font-weight: 500;
+    text-decoration: none;
+}
+
+nav a:hover {
+    color: var(--cor-secundaria);
+}
+
+/* Botão destaque */
+.btn-destaque {
+    border: 2px solid var(--cor-secundaria);
+    padding: 10px 18px;
+    border-radius: 8px;
+    color: var(--cor-secundaria);
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.btn-destaque:hover {
+    background: var(--cor-secundaria);
+    color: var(--branco);
+}
+
+/* =========================================
+   HERO
+========================================= */
+.hero {
+    background-image: url("../assets/images/rework-images/frotaCarros.png");
+    background-color: #e1e2df;
+
+    /* CORREÇÃO PRINCIPAL */
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: bottom center;
+
+    /* mantém o texto sempre visível */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+
+    min-height: 75vh;
+    padding: 120px 20px 200px; /* espaço para imagem ao fundo */
+    text-align: center;
+}
+
+.hero h2 {
+    font-size: 3rem;
+    color: var(--cor-primaria);
+    font-weight: 800;
+    margin-bottom: 20px;
+}
+
+.hero p {
+    background: rgba(255, 255, 255, 0.85);
+    padding: 12px 25px;
+    border-radius: 30px;
+    display: inline-block;
+    margin-bottom: 30px;
+}
+
+/* CTA */
+.btn-cta {
+    background: var(--cor-whatsapp);
+    color: white;
+    padding: 18px 40px;
+    border-radius: 50px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    display: inline-block;
+    transition: 0.3s;
+}
+
+.btn-cta:hover {
+    background: #1ebc57;
+    transform: translateY(-3px);
+}
+
+/* =========================================
+   PRODUTOS
+========================================= */
+.grid-produtos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+}
+
+.card-produto {
+    background: var(--branco);
+    border-radius: 10px;
+    border: 1px solid #eee;
+    overflow: hidden;
+    transition: 0.3s;
+    display: flex;
+    flex-direction: column;
+}
+
+.card-produto:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.img-produto {
+    width: 100%;
+    object-fit: contain;
+    background: #fafafa;
+    border-bottom: 1px solid #eee;
+}
+
+/* Infos */
+.info-produto {
+    padding: 20px;
+    flex-grow: 1;
+}
+
+.preco .de {
+    text-decoration: line-through;
+    color: #999;
+}
+
+.preco .por {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: var(--cor-secundaria);
+}
+
+/* Botão WhatsApp */
+.btn-whatsapp {
+    margin-top: auto;
+    background: var(--cor-whatsapp);
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-whatsapp:hover {
+    background: #1ebc57;
+}
+
+/* =========================================
+   SERVIÇOS
+========================================= */
+.grid-servicos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 25px;
+}
+
+.card {
+    background: var(--branco);
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+    transition: 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    border-bottom: 4px solid var(--cor-secundaria);
+}
+
+/* =========================================
+   MARCAS
+========================================= */
+
+.lista-marcas {
+    text-align: center; /* Centraliza tudo (spans e os |) */
+    padding: 20px 0;    /* Um respiro visual opcional */
+}
+
+.lista-marcas span {
+    color: #777;
+    font-size: 1.4rem;
+    margin: 0 10px;
+    font-weight: bold;
+}
+
+/* =========================================
+   FORMULÁRIO
+========================================= */
+.form-orcamento {
+    max-width: 500px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.form-orcamento input,
+.form-orcamento select {
+    padding: 12px;
+    border: 1px solid #bebebe;
+    border-radius: 6px;
+    background-color: var(--branco);
+}
+
+.feedback {
+    margin-top: 10px;
+    display: none;
+    color: green;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* =========================================
+   FOOTER
+========================================= */
+footer {
+    background: var(--cor-primaria);
+    color: #ccc;
+    text-align: center;
+    padding: 25px 0;
+}
+
+footer strong {
+    color: var(--branco);
+    font-size: 1.4rem;
+    margin-bottom: 8px;
+    display: block;
+}
+
+/* =========================================
+   RESPONSIVO
+========================================= */
+@media (max-width: 768px) {
+    nav ul {
+        gap: 15px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .hero {
+        background-size: 120% auto;
+        padding-bottom: 260px;
+    }
+
+    .hero h2 {
+        font-size: 2.2rem;
+    }
+}
+
+@media (max-width: 768px) {
+
+    .hero {
+        /* imagem menor e mais controlada no mobile */
+        background-size: 140%;
+        background-position: bottom center;
+
+        padding-top: 100px;
+        padding-bottom: 260px; /* deixa espaço para a imagem */
+    }
+
+    .hero h2 {
+        font-size: 2.2rem;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .hero {
+        background-size: 180%;
+        padding-top: 80px;
+        padding-bottom: 240px;
+    }
+
+    .hero h2 {
+        font-size: 1.9rem;
+    }
+}
