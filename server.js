@@ -6,47 +6,105 @@ const cors = require('cors');
 const app = express();
 const PORT = 3000;
 
-// Configurações padrão
 app.use(cors());
-app.use(express.json()); // Permite ler JSON vindo do front
-app.use(express.static(path.join(__dirname, '.'))); // Serve o seu HTML/CSS/JS
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, '.')));
 
-// ARQUIVO QUE SIMULA O BANCO DE DADOS
 const BANCO_DE_DADOS = 'pedidos.json';
 
-// Rota POST: Recebe o formulário e salva
+//carregar os pedidos
+function carregarPedidos() {
+    if (!fs.existsSync(BANCO_DE_DADOS)) {
+        fs.writeFileSync(BANCO_DE_DADOS, JSON.stringify([], null, 2));
+    }
+
+    const data = fs.readFileSync(BANCO_DE_DADOS, 'utf8');
+    return JSON.parse(data);
+}
+
+//salvar os pedidos
+function salvarPedidos(lista) {
+    fs.writeFileSync(BANCO_DE_DADOS, JSON.stringify(lista, null, 2));
+}
+
+//criar os orçamentos
 app.post('/api/orcamento', (req, res) => {
+    if (!req.body || Object.keys(req.body).length === 0) {
+        return res.status(400).json({ erro: "Corpo da requisição vazio" });
+    }
+
+    const listaPedidos = carregarPedidos();
+
     const novoPedido = {
         id: Date.now(),
         data: new Date().toLocaleString('pt-BR'),
         ...req.body
     };
 
-    console.log('Recebido:', novoPedido);
+    console.log("📩 Recebido do front:", novoPedido);
 
-    // Lógica de Persistência (Ler arquivo -> Adicionar -> Salvar arquivo)
-    fs.readFile(BANCO_DE_DADOS, 'utf8', (err, data) => {
-        let listaPedidos = [];
-        
-        if (!err && data) {
-            try {
-                listaPedidos = JSON.parse(data);
-            } catch (e) { console.log('Criando novo arquivo de banco...'); }
-        }
+    listaPedidos.push(novoPedido);
+    salvarPedidos(listaPedidos);
 
-        listaPedidos.push(novoPedido);
-
-        fs.writeFile(BANCO_DE_DADOS, JSON.stringify(listaPedidos, null, 2), (err) => {
-            if (err) {
-                return res.status(500).json({ erro: 'Erro ao salvar no banco' });
-            }
-            res.status(201).json({ mensagem: 'Pedido salvo com sucesso!' });
-        });
-    });
+    res.status(201).json({ mensagem: "Orçamento salvo com sucesso!", pedido: novoPedido });
 });
 
-// Inicia o servidor
+//ler os or~çamentos
+app.get('/api/orcamento', (req, res) => {
+    const listaPedidos = carregarPedidos();
+    res.json(listaPedidos);
+});
+
+//buscar os orçamentos por ID
+app.get('/api/orcamento/:id', (req, res) => {
+    const listaPedidos = carregarPedidos();
+    const pedido = listaPedidos.find(p => p.id == req.params.id);
+
+    if (!pedido) {
+        return res.status(404).json({ erro: "Orçamento não encontrado" });
+    }
+
+    res.json(pedido);
+});
+
+//atualizar o orçamento
+app.put('/api/orcamento/:id', (req, res) => {
+    const listaPedidos = carregarPedidos();
+    const index = listaPedidos.findIndex(p => p.id == req.params.id);
+
+    if (index === -1) {
+        return res.status(404).json({ erro: "Orçamento não encontrado" });
+    }
+
+    listaPedidos[index] = {
+        ...listaPedidos[index],
+        ...req.body,
+        atualizadoEm: new Date().toLocaleString('pt-BR')
+    };
+
+    salvarPedidos(listaPedidos);
+
+    res.json({ mensagem: "Orçamento atualizado!", pedido: listaPedidos[index] });
+});
+
+
+//deletar o orçamento
+
+app.delete('/api/orcamento/:id', (req, res) => {
+    const listaPedidos = carregarPedidos();
+    const novaLista = listaPedidos.filter(p => p.id != req.params.id);
+
+    if (novaLista.length === listaPedidos.length) {
+        return res.status(404).json({ erro: "Orçamento não encontrado" });
+    }
+
+    salvarPedidos(novaLista);
+
+    res.json({ mensagem: "Orçamento removido com sucesso!" });
+});
+
+// ------------------------------------------------------------
 app.listen(PORT, () => {
-    console.log(`🚀 Servidor rodando em: http://localhost:${PORT}`);
-    console.log(`📝 Banco de dados: ${path.join(__dirname, BANCO_DE_DADOS)}`);
+    console.log(`🚀 Servidor rodando em http://localhost:${PORT}`);
 });

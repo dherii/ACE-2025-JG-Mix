@@ -1,65 +1,78 @@
-const botoesCompra = document.querySelectorAll('.btn-whatsapp');
 
-botoesCompra.forEach(botao => {
-    botao.addEventListener('click', function() {
-        // Pega os dados que colocamos no HTML
-        const nomeProduto = this.getAttribute('data-nome');
-        const precoProduto = this.getAttribute('data-preco');
-        
-        // Número do WhatsApp da Loja (Adicione o código do país 55 e DDD)
-        const numeroLoja = "558896286336"; 
-        
-        // Cria a mensagem automática
-        // O encodeURIComponent garante que espaços e acentos funcionem na URL
-        const mensagem = `Olá! Vi no site e tenho interesse na *${nomeProduto}* por *R$ ${precoProduto}*. Podem entregar?`;
-        
-        // Cria o link final
-        const linkZap = `https://wa.me/${numeroLoja}?text=${encodeURIComponent(mensagem)}`;
-        
-        // Abre o WhatsApp em nova aba
-        window.open(linkZap, '_blank');
+document.addEventListener("DOMContentLoaded", () => {
+    const numeroLoja = "558896286336";
+
+
+    const botoes = document.querySelectorAll(".btn-whatsapp");
+    botoes.forEach(botao => {
+        botao.addEventListener("click", () => {
+            const nome = botao.dataset.nome ?? "Produto";
+            const preco = botao.dataset.preco ?? "sob consulta";
+
+            const mensagem = `Olá! Tenho interesse na *${nome}* que está por *R$ ${preco}*. Pode me enviar mais informações?`;
+            const url = `https://wa.me/${numeroLoja}?text=${encodeURIComponent(mensagem)}`;
+            window.open(url, "_blank");
+        });
     });
-});
+
+    const form = document.getElementById("form-orcamento");
+    const feedback = document.getElementById("feedback");
+
+    if (!form) return;
+
+    form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        const nome = form.elements["nome"]?.value.trim();
+        const telefone = form.elements["telefone"]?.value.trim();
+        const veiculo = form.elements["veiculo"]?.value;
+
+        if (!nome || !telefone || !veiculo) {
+            alert("Preencha todos os campos!");
+            return;
+        }
+
+        const dados = { nome, telefone, veiculo };
 
 
-const formulario = document.getElementById('form-orcamento');
-
-if (formulario) {
-    formulario.addEventListener('submit', async function(event) {
-        event.preventDefault(); // 1. Impede a página de recarregar
-        
-        const formData = new FormData(event.target);
-        const dados = Object.fromEntries(formData.entries()); // 2. Transforma em JSON
-    
-        const btn = event.target.querySelector('button');
-        const textoOriginal = btn.innerText;
-        btn.innerText = "Enviando...";
+        const btn = form.querySelector("button[type='submit']");
+        const original = btn.innerText;
         btn.disabled = true;
-    
+        btn.innerText = "Enviando...";
+
         try {
-            // 3. Envia para o servidor que criamos
-            const response = await fetch('/api/orcamento', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+            const resposta = await fetch("http://localhost:3000/api/orcamento", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(dados)
             });
-    
-            if (response.ok) {
-                // 4. Mostra mensagem de sucesso
-                document.getElementById('feedback').style.display = 'block';
-                event.target.reset();
-                setTimeout(() => {
-                    document.getElementById('feedback').style.display = 'none';
-                }, 5000);
-            } else {
-                alert('Erro ao enviar. Tente novamente.');
+
+            if (!resposta.ok) {
+                alert("Erro ao salvar no servidor.");
+                btn.disabled = false;
+                btn.innerText = original;
+                return;
             }
-        } catch (error) {
-            console.error('Erro:', error);
-            alert('Erro de conexão com o servidor.');
-        } finally {
-            btn.innerText = textoOriginal;
-            btn.disabled = false;
+
+            const mensagem = `Olá! Gostaria de solicitar um orçamento:\n• Veículo: *${veiculo}*\n• Nome: *${nome}*\n• Telefone: *${telefone}*`;
+
+            const url = `https://wa.me/${numeroLoja}?text=${encodeURIComponent(mensagem)}`;
+
+            window.open(url, "_blank");
+
+            if (feedback) {
+                feedback.style.display = "block";
+                setTimeout(() => feedback.style.display = "none", 4000);
+            }
+
+            form.reset();
+        } catch (erro) {
+            console.error("Erro no envio:", erro);
+            alert("Não foi possível enviar o orçamento.");
         }
+
+
+        btn.disabled = false;
+        btn.innerText = original;
     });
-}
+});
