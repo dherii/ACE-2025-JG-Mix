@@ -43,7 +43,7 @@
             <p>Entrega e instalação gratuita em toda a região. Baterias com garantia e o melhor preço.</p>
 
             <a href="https://wa.me/558896286336" target="_blank" class="btn-cta" aria-label="Chamar no WhatsApp agora">
-                CHAMAR NO WHATSAPP AGORA
+                CHAMAR NO WHATSAPP
             </a>
         </div>
     </section>
@@ -176,17 +176,39 @@
             <p class="texto-centro">Deixe seu contato que ligamos para você.</p>
 
             <form id="form-orcamento" class="form-orcamento">
-                <input type="text" name="nome" placeholder="Seu Nome" required>
-                <input type="tel" name="telefone" placeholder="Seu Telefone" required>
 
-                <select name="veiculo">
-                    <option value="carro">Carro</option>
-                    <option value="moto">Moto</option>
-                    <option value="caminhao">Caminhão</option>
-                </select>
 
-                <button type="submit" class="btn-destaque">Enviar Solicitação</button>
-            </form>
+    <input 
+        type="text" 
+        id="nome" 
+        name="nome" 
+        placeholder="Seu Nome" 
+        required
+    >
+    <input 
+        type="tel" 
+        id="telefone" 
+        name="telefone" 
+        placeholder="Seu Telefone" 
+        required
+    >
+
+    <select 
+        id="veiculo" 
+        name="veiculo" 
+        required
+    >
+        <option value="" selected disabled>Selecione...</option>
+        <option value="carro">Carro</option>
+        <option value="moto">Moto</option>
+        <option value="caminhao">Caminhão</option>
+    </select>
+
+    <button type="submit" class="btn-destaque">
+        Enviar Solicitação
+    </button>
+
+</form>
 
             <p id="feedback" class="feedback">Recebemos seu pedido!</p>
         </div>
@@ -202,7 +224,7 @@
         </div>
     </footer>
 
-    <script src="script.js"></script>
+    <script src="./js/script.js"></script>
 
 </body>
 
